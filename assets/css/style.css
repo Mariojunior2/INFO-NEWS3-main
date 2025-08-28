@@ -1,136 +1,172 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
+/* Estilo geral de jornal */
+body {
+  background: #fdf6e3 url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+  font-family: 'Georgia', serif;
+  margin: 0; padding: 0;
 }
 
-* {
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Georgia', 'Times New Roman', serif;
-    background-color: #fdf6e3;
-    background: #fdf6e3 url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-    color: #222;
-    margin: 0;
-    padding: 0;
-    max-height: 100vh;
+h1 {
+  background: #f5deb3;
+  padding: 1em 0;
+  text-align: center;
+  margin: 0;
+  border-bottom: 2px solid #ccc;
+  font-size: clamp(1.2rem, 5vw, 2.5rem); /* ajusta dinamicamente */
+}
 
-  }
-  
-  h1 {
-    text-align: center;
-    font-size: 2.5em;
-    padding: 20px 0;
-    background-color: #f5deb3;
-    margin: 0;
-    border-bottom: 2px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  
+/* Container PDF principal */
+#pdf-container {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  height: min(50vh, 400px); /* garante adaptação */
+  margin: 2em auto;
+  background: #fffef7;
+  overflow: hidden;
+  border: 1px solid #e0d7c3;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
 
-  #pdf-container {
-    max-width: 900px;
-    margin: 30px auto;
-    background: #fffef7;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border: 1px solid #e0d7c3;
-    padding: 20px;
-    border-radius: 4px;
-    width: 90%;
-  }
-  
-  canvas {
-    width: 100% !important;
-    height: auto !important;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: block;
-  }
+canvas {
+  width: 100%; height: auto;
+  display: block;
+  object-fit: contain;
+}
 
-  #navigation {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 1em;
-    font-family: 'Georgia', serif;
-    background: linear-gradient(to bottom right, #fdf6e3, #e0d7c3);
-    border: 1px solid #bbb;
-    cursor: pointer;
-    box-shadow: 2px 2px 0 #ccc;
-    position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    overflow: hidden;
-    min-width: 130px;
-    text-align: center;
-  }
-  
-  button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: -40px;
-    width: 40px;
-    height: 100%;
-    background: linear-gradient(to left, #d4c7a8, transparent);
-    transform: skewX(-25deg);
-    transition: all 0.3s ease;
-    pointer-events: none;
-  }
-  
-  button:hover {
-    transform: translateY(-2px) rotate(-0.5deg);
-    box-shadow: 4px 4px 0 #aaa;
-  }
-  
-  button:hover::before {
-    right: 0;
-  }
-  
+/* Navegação inline */
+.nav-inline {
+  position: absolute;
+  bottom: 0.5em;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1em;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+#pdf-container:hover .nav-inline { opacity: 1; }
 
-  footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #f5deb3;
-    color: #555;
-    font-size: 0.9em;
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
-    margin-top: auto;
+.nav-inline button {
+  background: rgba(224,208,195,0.9);
+  color: #5a3e2b;
+  border: 1px solid #bca089;
+  padding: 0.6em 1em;
+  font-size: clamp(0.9rem, 3vw, 1.2rem);
+  cursor: pointer;
+  border-radius: 4px;
+  min-width: 44px; /* tamanho mínimo toque Android */
+  min-height: 44px;
+}
 
-   
+/* Botão abrir modal */
+.open-modal {
+  position: absolute;
+  top: 0.5em; right: 0.5em;
+  background: rgba(224,208,195,0.9);
+  color: #5a3e2b;
+  border: 1px solid #bca089;
+  padding: 0.5em 1em;
+  font-size: clamp(0.8rem, 3vw, 1rem);
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.3s, clip-path 0.4s ease;
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+}
+.open-modal:hover {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 1;
+}
+
+/* Modal full-screen */
+#pdf-modal {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.9);
+  display: none; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  width: 95%;
+  max-width: 700px;
+  max-height: 90vh;
+  background: #fffef7;
+  padding: 1em;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+  border: 1px solid #e0d7c3;
+  overflow-y: auto;
+  border-radius: 6px;
+}
+
+/* Botão fechar modal */
+.close-modal {
+  position: fixed; top: 1em; right: 1em;
+  background: rgba(224,208,195,0.9);
+  color: #5a3e2b;
+  border: 1px solid #bca089;
+  padding: 0.6em 1em;
+  font-size: clamp(0.9rem, 3vw, 1.2rem);
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  z-index: 1010;
+}
+#pdf-modal:hover .close-modal { opacity: 1; }
+
+/* Navegação modal */
+.modal-nav {
+  position: fixed;
+  bottom: 1.5em;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.5em;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  z-index: 1010;
+}
+#pdf-modal:hover .modal-nav { opacity: 1; }
+
+.modal-nav button {
+  background: rgba(224,208,195,0.9);
+  color: #5a3e2b;
+  border: 1px solid #bca089;
+  padding: 0.7em 1.2em;
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  cursor: pointer;
+  border-radius: 4px;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Indicador página */
+.page-indicator {
+  position: fixed;
+  bottom: 1.5em;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.9);
+  color: #5a3e2b;
+  font-size: clamp(0.8rem, 3vw, 1rem);
+  padding: 0.5em 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 1010;
+}
+
+/* Mobile refinado */
+@media(max-width:768px) {
+  h1 { font-size: clamp(1.2rem, 6vw, 2rem); }
+  .nav-inline button, .open-modal, .close-modal, .modal-nav button {
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    padding: 0.8em 1.2em;
   }
-  
-  @media (max-width: 600px) {
-    h1 {
-      font-size: 2em;
-      padding: 15px 10px;
-    }
-  
-    #pdf-container {
-      width: 100%;
-      margin: 15px auto;
-      padding: 10px;
-    }
-  
-    button {
-      min-width: 100px;
-      padding: 8px 15px;
-      font-size: 0.9em;
-    }
-  
-    #navigation {
-      gap: 10px;
-    }
+  .page-indicator {
+    font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+    padding: 0.6em 1.2em;
   }
-  
+}
